@@ -1,0 +1,39 @@
+name: Node CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use NodeJS ${{matrix.node-version}}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Use cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{runner.os}}-${{hashFiles('**/package-lock.json')}}
+      - name: Install dependencies
+        run: npm install
+      - name: Copy via SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.REMOTE_HOST}}
+          username: ${{secrets.REMOTE_USER}}
+          password: ${{secrets.REMOTE_PASS}}
+          source: "*"
+          target: ${{secrets.REMOTE_TARGET}}
