@@ -31,6 +31,7 @@ jobs:
         run: npm install
       - name: Copy via SSH
         uses: appleboy/scp-action@master
+        if: github.event_name != 'pull_request'
         with:
           host: ${{secrets.REMOTE_HOST}}
           username: ${{secrets.REMOTE_USER}}
