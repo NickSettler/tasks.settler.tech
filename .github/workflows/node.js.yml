@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build:
+  init:
     runs-on: ubuntu-latest
 
     strategy:
@@ -29,9 +29,21 @@ jobs:
           key: ${{runner.os}}-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm install
+      - name: Run ESLint
+        run: npm run lint-fix
+
+  deploy:
+    needs: init
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
+    steps:
       - name: Copy via SSH
         uses: appleboy/scp-action@master
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || github.event.pull_request.merged
         with:
           host: ${{secrets.REMOTE_HOST}}
           username: ${{secrets.REMOTE_USER}}
