@@ -41,6 +41,7 @@ jobs:
         node-version: [12.x, 14.x]
 
     steps:
+      - uses: actions/checkout@v2
       - name: Copy via SSH
         uses: appleboy/scp-action@master
         if: github.event_name != 'pull_request' || github.event.pull_request.merged
