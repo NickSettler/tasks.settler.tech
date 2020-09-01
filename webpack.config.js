@@ -33,7 +33,7 @@ module.exports = {
     ],
     devServer: {
         host: '0.0.0.0',
-        port: 8081,
+        port: 8086,
         contentBase: path.resolve(__dirname, 'dist'),
         disableHostCheck: true,
         compress: true,
