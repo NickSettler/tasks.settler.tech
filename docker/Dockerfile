@@ -4,5 +4,5 @@ WORKDIR /home/node/app
 COPY package.json package.json
 RUN npm install
 COPY . .
-EXPOSE 8086
+EXPOSE 8087
 CMD ["npm", "start"]
